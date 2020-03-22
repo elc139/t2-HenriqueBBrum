@@ -8,17 +8,15 @@
 ## 1.
    a) Particionamento: Acontece quando cada thread recebe um offest para tratar de uma parte individual do vetor.
 
-   Em void dotprod_threads(int nthreads):
+      Em void dotprod_threads(int nthreads):
 
-   ```
-   for (i = 0; i < nthreads; i++) {
-      pthread_create(&threads[i], &attr, dotprod_worker, (void *) i);
-   }
+      for (i = 0; i < nthreads; i++) {
+         pthread_create(&threads[i], &attr, dotprod_worker, (void *) i);
+       }
 
-   ```
-   Em void* dotprod_worker(void* arg):
 
-      ```
+      Em void* dotprod_worker(void* arg):
+
       int start = offset*wsize;
       int end = start + wsize;
 
@@ -27,15 +25,13 @@
         for (i = start; i < end ; i++)  {
            mysum += (a[i] * b[i]);
         }
-     }
-      ```
+      }
+      
 
    b) Comunicação: Ocorre quando todos as threads precisam fazer o calculo da multiplicação entre
    cada posição e a soma dessas multiplicações.
 
       Em void* dotprod_worker(void* arg):
-
-      ```
 
       for (k = 0; k < dotdata.repeat; k++) {
          mysum = 0.0;
@@ -51,13 +47,10 @@
       dotdata.c += mysum;
       pthread_mutex_unlock (&mutexsum);
 
-      ```
    c) Aglomeração: Ocorre quando é feito multiplas subsomas tanto no processo de multiplicação quanto
      no processo do somatório final.
 
       Em void* dotprod_worker(void* arg):
-
-      ```
 
       for (k = 0; k < dotdata.repeat; k++) {
          mysum = 0.0;
@@ -72,20 +65,16 @@
       dotdata.c += mysum;
       pthread_mutex_unlock (&mutexsum);
 
-      ```
-
+    
    d) Mapeamento: Acontece quando há divisão ou controle das threads.
 
         Em void dotprod_threads(int nthreads):
 
-        ```
 
         for (i = 0; i < nthreads; i++) {
           pthread_join(threads[i], NULL);
         }
-
-        ```
-
+        
 
 ### 2.
 
@@ -93,12 +82,12 @@
 
 ### 3.
 
-   Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads
+   - Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads
   para o mesmo número de iterações o Speedup começa a se estabilizar após 4 threads e em alguns casos piora.
 
 ### 4.
 
-   Tamanho Inicial Vetor = 10^6, Repetições = 2000
+   - Tamanho Inicial Vetor = 10^6, Repetições = 2000
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5)) |
   |------------------|:--------------------:|-----------------------|---------------------------|
@@ -118,9 +107,8 @@
   | 4                     | 16                 | 1,134843994    |
 
   ***
-  ***
 
-   Tamanho Inicial Vetor = 10^7, Repetições = 2000
+   - Tamanho Inicial Vetor = 10^7, Repetições = 2000
   
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
@@ -140,9 +128,8 @@
   | 4                     | 16                 | 1,061469817    |
 
   ***
-  ***
 
-   Tamanho Inicial Vetor = 10^7, Repetições = 2000
+   - Tamanho Inicial Vetor = 10^7, Repetições = 2000
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
   |------------------|:--------------------:|-----------------------|----------------------------|
@@ -161,9 +148,8 @@
   | 4                     | 16                 | 0,993288314    |
 
   ***
-  ***
 
-   Tamanho Inicial Vetor = 10^8, Repetições = 100
+   - Tamanho Inicial Vetor = 10^8, Repetições = 100
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
   |------------------|:--------------------:|-----------------------|----------------------------|
@@ -184,12 +170,9 @@
 
 
 
-
-
 ### 5.
-   O código pthreads_dotprod.c possui exclusão mutua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code
-  não.
-   Nesse caso o resultado fica igual pois não importa a ordem de acesso à esse dado e nem o valor do mesmo.
+   - O código pthreads_dotprod.c possui exclusão mutua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code
+  não. Nesse caso o resultado fica igual pois não importa a ordem de acesso à esse dado e nem o valor do mesmo.
   Pois se uma thread fossse incrementar dotdata.c e logo antes de fazer ADD X, Y, Z outra thread interrompesse
   e se somasse à dotdata.c o valor final de dotdata.c ficaria igual.
 
@@ -200,7 +183,7 @@
 
 ### 2.
 
-   Tamanho Inicial Vetor = 10^6, Repetições = 2000
+   - Tamanho Inicial Vetor = 10^6, Repetições = 2000
     
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5)) |
   |------------------|:--------------------:|-----------------------|---------------------------|
@@ -220,9 +203,8 @@
   | 4                     | 16                 | 1,060636117    |
   
   ***
-  ***
 
-   Tamanho Inicial Vetor = 10^7, Repetições = 2000
+   - Tamanho Inicial Vetor = 10^7, Repetições = 2000
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
   |------------------|:--------------------:|-----------------------|----------------------------|
@@ -241,9 +223,8 @@
   | 4                     | 16                 | 1,024625196    |
 
   ***
-  ***
 
-   Tamanho Inicial Vetor = 10^7, Repetições = 1000
+   - Tamanho Inicial Vetor = 10^7, Repetições = 1000
 
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
@@ -263,9 +244,8 @@
   | 4                     | 16                 | 1,007037165    |
 
   ***
-  ***
 
-   Tamanho Inicial Vetor = 10^8, Repetições = 100
+   - Tamanho Inicial Vetor = 10^8, Repetições = 100
 
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
