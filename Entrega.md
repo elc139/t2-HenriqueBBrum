@@ -5,18 +5,18 @@
 
 ## Pthreads:
 
-### 1.
-   a)Particionamento: Acontece quando cada thread recebe um offest para tratar de uma parte individual do vetor.
+## 1.
+   a) Particionamento: Acontece quando cada thread recebe um offest para tratar de uma parte individual do vetor.
 
-       Em void dotprod_threads(int nthreads):
+   Em void dotprod_threads(int nthreads):
 
-      ```
-      for (i = 0; i < nthreads; i++) {
-         pthread_create(&threads[i], &attr, dotprod_worker, (void *) i);
-      }
+   ```
+   for (i = 0; i < nthreads; i++) {
+      pthread_create(&threads[i], &attr, dotprod_worker, (void *) i);
+   }
 
-      ```
-      Em void* dotprod_worker(void* arg):
+   ```
+   Em void* dotprod_worker(void* arg):
 
       ```
       int start = offset*wsize;
@@ -30,7 +30,7 @@
      }
       ```
 
-   b)Comunicação: Ocorre quando todos as threads precisam fazer o calculo da multiplicação entre
+   b) Comunicação: Ocorre quando todos as threads precisam fazer o calculo da multiplicação entre
    cada posição e a soma dessas multiplicações.
 
       Em void* dotprod_worker(void* arg):
@@ -52,7 +52,7 @@
       pthread_mutex_unlock (&mutexsum);
 
       ```
-   c)Aglomeração: Ocorre quando é feito multiplas subsomas tanto no processo de multiplicação quanto
+   c) Aglomeração: Ocorre quando é feito multiplas subsomas tanto no processo de multiplicação quanto
      no processo do somatório final.
 
       Em void* dotprod_worker(void* arg):
@@ -74,7 +74,7 @@
 
       ```
 
-   d)Mapeamento: Acontece quando há divisão ou controle das threads.
+   d) Mapeamento: Acontece quando há divisão ou controle das threads.
 
         Em void dotprod_threads(int nthreads):
 
@@ -93,12 +93,12 @@
 
 ### 3.
 
-  Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads
+   Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads
   para o mesmo número de iterações o Speedup começa a se estabilizar após 4 threads e em alguns casos piora.
 
 ### 4.
 
-  Tamanho Inicial Vetor = 10^6, Repetições = 2000
+   Tamanho Inicial Vetor = 10^6, Repetições = 2000
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5)) |
   |------------------|:--------------------:|-----------------------|---------------------------|
@@ -118,8 +118,9 @@
   | 4                     | 16                 | 1,134843994    |
 
   ***
+  ***
 
-  Tamanho Inicial Vetor = 10^7, Repetições = 2000
+   Tamanho Inicial Vetor = 10^7, Repetições = 2000
   
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
@@ -139,8 +140,9 @@
   | 4                     | 16                 | 1,061469817    |
 
   ***
+  ***
 
-  Tamanho Inicial Vetor = 10^7, Repetições = 2000
+   Tamanho Inicial Vetor = 10^7, Repetições = 2000
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
   |------------------|:--------------------:|-----------------------|----------------------------|
@@ -159,8 +161,9 @@
   | 4                     | 16                 | 0,993288314    |
 
   ***
+  ***
 
-  Tamanho Inicial Vetor = 10^8, Repetições = 100
+   Tamanho Inicial Vetor = 10^8, Repetições = 100
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
   |------------------|:--------------------:|-----------------------|----------------------------|
@@ -196,6 +199,7 @@
 ## OpenMP:
 
 ### 2.
+
    Tamanho Inicial Vetor = 10^6, Repetições = 2000
     
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5)) |
@@ -216,8 +220,9 @@
   | 4                     | 16                 | 1,060636117    |
   
   ***
+  ***
 
-  Tamanho Inicial Vetor = 10^7, Repetições = 2000
+   Tamanho Inicial Vetor = 10^7, Repetições = 2000
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
   |------------------|:--------------------:|-----------------------|----------------------------|
@@ -236,8 +241,9 @@
   | 4                     | 16                 | 1,024625196    |
 
   ***
+  ***
 
-  Tamanho Inicial Vetor = 10^7, Repetições = 1000
+   Tamanho Inicial Vetor = 10^7, Repetições = 1000
 
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
@@ -257,8 +263,9 @@
   | 4                     | 16                 | 1,007037165    |
 
   ***
+  ***
 
-  Tamanho Inicial Vetor = 10^8, Repetições = 100
+   Tamanho Inicial Vetor = 10^8, Repetições = 100
 
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
@@ -281,9 +288,8 @@
 
 
 
-
 ## Referências:
 
--Microsoft. Microsoft OpenMP.  https://docs.microsoft.com/pt-br/cpp/parallel/openmp/openmp-in-visual-cpp?view=vs-2019
+- Microsoft. Microsoft OpenMP.  https://docs.microsoft.com/pt-br/cpp/parallel/openmp/openmp-in-visual-cpp?view=vs-2019
 
--Joel Yliluoma. Guide into OpenMP. https://bisqwit.iki.fi/story/howto/openmp/#ExampleInitializingATableInParallelMultipleThreads
+- Joel Yliluoma. Guide into OpenMP. https://bisqwit.iki.fi/story/howto/openmp/#ExampleInitializingATableInParallelMultipleThreads
