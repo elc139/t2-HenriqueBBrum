@@ -3,18 +3,22 @@
  *  andrea@inf.ufsm.br
  */
 
+ #define NTESTS 4
+ #define NTHREADS 5
+ #define NINDTESTS 5
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h>
+#include <sys/time.h>
 
-typedef struct 
+typedef struct
  {
    double *a;
    double *b;
-   double c; 
+   double c;
    int wsize;
-   int repeat; 
+   int repeat;
  } dotdata_t;
 
 // Variaveis globais, acessiveis por todas threads
@@ -29,7 +33,7 @@ void *dotprod_worker(void *arg)
    int i, k;
    long offset = (long) arg;
    double *a = dotdata.a;
-   double *b = dotdata.b;     
+   double *b = dotdata.b;
    int wsize = dotdata.wsize;
    int start = offset*wsize;
    int end = start + wsize;
@@ -45,12 +49,11 @@ void *dotprod_worker(void *arg)
    pthread_mutex_lock (&mutexsum);
    dotdata.c += mysum;
    pthread_mutex_unlock (&mutexsum);
-
    pthread_exit((void*) 0);
 }
 
 
-/* 
+/*
  * Distribui o trabalho entre nthreads
  */
 void dotprod_threads(int nthreads)
@@ -66,11 +69,12 @@ void dotprod_threads(int nthreads)
    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
    for (i = 0; i < nthreads; i++) {
-      pthread_create(&threads[i], &attr, dotprod_worker, (void *) i);
+      pthread_create(&threads[i], &attr, dotprod_worker, (void *)i);
    }
    pthread_attr_destroy(&attr);
    for (i = 0; i < nthreads; i++) {
       pthread_join(threads[i], NULL);
+
    }
    free(threads);
 }
@@ -78,7 +82,7 @@ void dotprod_threads(int nthreads)
 
 /*
  * Tempo (wallclock) em microssegundos
- */ 
+ */
 long wtime()
 {
    struct timeval t;
@@ -88,21 +92,68 @@ long wtime()
 
 /*
  * Preenche vetor
- */ 
+ */
 void fill(double *a, int size, double value)
-{  
+{
    int i;
    for (i = 0; i < size; i++) {
       a[i] = value;
    }
 }
 
+long int createAndTestThread(int nthreads, long int wsize, int repeat){
+
+  long start_time, end_time;
+  dotdata.a = (double *) malloc(wsize*nthreads*sizeof(double));
+  fill(dotdata.a, wsize*nthreads, 0.01);
+  dotdata.b = (double *) malloc(wsize*nthreads*sizeof(double));
+  fill(dotdata.b, wsize*nthreads, 1.0);
+  dotdata.c = 0.0;
+  dotdata.wsize = wsize;
+  dotdata.repeat = repeat;
+
+  // Calcula c = a . b em nthreads, medindo o tempo
+  start_time = wtime();
+  dotprod_threads(nthreads);
+  end_time = wtime();
+
+  // Mostra resultado e estatisticas da execucao
+  printf("%f\n", dotdata.c);
+  printf("%d thread(s), wsize = %ld, repeat = %d, %ld usec\n", nthreads, wsize, repeat, (long) (end_time - start_time));
+  fflush(stdout);
+
+  free(dotdata.a);
+  free(dotdata.b);
+
+  return (long) (end_time - start_time);
+}
+
+
+void tests(){
+  int nthreads[NTHREADS] = {1,2,4,8,16};
+  long int initialSizes[NTESTS] = {1000000, 10000000, 10000000, 100000000};
+  int initalRept[NTESTS] = {2000,2000,1000,100};
+  for(int i =0;  i<NTESTS;i++){
+    for(int j = 0;j<NTHREADS;j++){
+        int avg = 0;
+        for(int k = 0; k < NINDTESTS; k++){
+          avg+=createAndTestThread(nthreads[j], (long int)initialSizes[i]/nthreads[j], initalRept[i]);
+        }
+        avg = avg/NINDTESTS;
+        printf("Final time result %d thread(s), wsize = %ld, repeat = %d, %ld usec\n", nthreads[j], (long int)initialSizes[i]/nthreads[j], initalRept[i], (long) avg);
+        printf("\n###################################\n");
+    }
+    printf("\n----------------------------------\n");
+
+  }
+
+}
 /*
  * Funcao principal
- */ 
+ */
 int main(int argc, char **argv)
 {
-   int nthreads, wsize, repeat;
+   /*int nthreads, wsize, repeat;
    long start_time, end_time;
 
    if ((argc != 4)) {
@@ -110,32 +161,12 @@ int main(int argc, char **argv)
       exit(EXIT_FAILURE);
    }
 
-   nthreads = atoi(argv[1]); 
+   nthreads = atoi(argv[1]);
    wsize = atoi(argv[2]);  // worksize = tamanho do vetor de cada thread
-   repeat = atoi(argv[3]); // numero de repeticoes dos calculos (para aumentar carga)
+   repeat = atoi(argv[3]); // numero de repeticoes dos calculos (para aumentar carga)*/
 
    // Cria vetores
-   dotdata.a = (double *) malloc(wsize*nthreads*sizeof(double));
-   fill(dotdata.a, wsize*nthreads, 0.01);
-   dotdata.b = (double *) malloc(wsize*nthreads*sizeof(double));
-   fill(dotdata.b, wsize*nthreads, 1.0);
-   dotdata.c = 0.0;
-   dotdata.wsize = wsize;
-   dotdata.repeat = repeat;
 
-   // Calcula c = a . b em nthreads, medindo o tempo
-   start_time = wtime();
-   dotprod_threads(nthreads);
-   end_time = wtime();
-
-   // Mostra resultado e estatisticas da execucao
-   printf("%f\n", dotdata.c);
-   printf("%d thread(s), %ld usec\n", nthreads, (long) (end_time - start_time));
-   fflush(stdout);
-
-   free(dotdata.a);
-   free(dotdata.b);
-
+   tests();
    return EXIT_SUCCESS;
 }
-
