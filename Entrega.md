@@ -82,11 +82,10 @@
 
 ### 3.
 
-   - Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads
-  para o mesmo número de iterações o Speedup começa a se estabilizar após 4 threads e em alguns casos piora.
+   - Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads para o mesmo número de iterações o Speedup começa a se estabilizar após 4 threads e em alguns casos piora.
 
 ### 4.
-
+   As tabelas a seguir mostram testes com o tamanho do veto e o número de repetições variado. Dentro de cada teste o número de thread também varia e por consequência o tamanho do vetor também. O Tempo é uma média aritimética de 5 tempos. O segundo gráfico é a tabela de Speedup. O Speedup é calculado dividindo o Tempo do teste com 'Qnt Thread Inicia' pelo Tempo do teste 'Qnt Threads Final'.
    - Tamanho Inicial Vetor = 10^6, Repetições = 2000
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5)) |
@@ -169,13 +168,11 @@
   | 4                     | 16                 | 1,081530996    |
 
 
-
 ### 5.
-   - O código pthreads_dotprod.c possui exclusão mútua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code
-  não. 
-   - O resultado fica igual nos dois códigos porque não importa a ordem de acesso à esse dado e nem o valor do mesmo. Isso
-  ocorre pois se uma thread fosse incrementar dotdata.c e logo antes de fazer a operação em assembly 'ADD X, Y, Z' outra thread 
-  a interrompesse e modificasse o valor de dotdata.c o valor final de dotdata.c não mudaria
+   O código pthreads_dotprod.c possui exclusão mútua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code não. 
+   
+   
+   O resultado fica igual nos dois códigos porque não importa a ordem de acesso à esse dado e nem o valor do mesmo. Isso ocorre pois se uma thread fosse incrementar dotdata.c e logo antes de fazer a operação em assembly 'ADD X, Y, Z' outra thread a interrompesse e modificasse o valor de dotdata.c o valor final de dotdata.c não mudaria
 
 
 
