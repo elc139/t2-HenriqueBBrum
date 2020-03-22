@@ -1,11 +1,11 @@
-#Programação Paralela
+# Programação Paralela
 
-####Henrique Becker Brum
+#### Henrique Becker Brum
 
 
-##Pthreads:
+## Pthreads:
 
-###1.
+### 1.
     a)Particionamento: Acontece quando cada thread recebe um offest para tratar de uma parte individual do vetor.
 
       Em void dotprod_threads(int nthreads):
@@ -87,14 +87,14 @@
         ```
 
 
-###2.
+### 2.
     Speedup = 5227699/3832217 = 1,364144828
 
-###3.
+### 3.
   Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads
   para o mesmo número de iterações o Speedup começa a se estabilizar após 4 threads e em alguns casos piora.
 
-###4.
+### 4.
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5)) |
   |------------------|:--------------------:|-----------------------|---------------------------|
@@ -113,7 +113,7 @@
   | 4                     | 8                  | 0,975008384    |
   | 4                     | 16                 | 1,134843994    |
 
-  
+
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5))  |
   |------------------|:--------------------:|-----------------------|----------------------------|
@@ -172,10 +172,9 @@
 
 
 
-###5.
+### 5.
       O código pthreads_dotprod.c possui exclusão mutua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code
     não.
-
       Nesse caso o resultado fica igual pois não importa a ordem de acesso à esse dado e nem o valor do mesmo.
     Pois se uma thread fossse incrementar dotdata.c e logo antes de fazer ADD X, Y, Z outra thread interrompesse
     e se somasse à dotdata.c o valor final de dotdata.c ficaria igual.
@@ -183,9 +182,9 @@
 
 
 
-##OpenMP:
+## OpenMP:
 
-###2.
+### 2.
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5)) |
   |------------------|:--------------------:|-----------------------|---------------------------|
@@ -263,7 +262,7 @@
 
 
 
-Referências:
+## Referências:
 
 Microsoft. Microsoft OpenMP.  https://docs.microsoft.com/pt-br/cpp/parallel/openmp/openmp-in-visual-cpp?view=vs-2019
 
