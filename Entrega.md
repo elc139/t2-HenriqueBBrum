@@ -171,9 +171,9 @@
 
 
 ### 5.
-   O código pthreads_dotprod.c possui exclusão mútua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code
+   - O código pthreads_dotprod.c possui exclusão mútua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code
   não. 
-   O resultado fica igual nos dois códigos porque não importa a ordem de acesso à esse dado e nem o valor do mesmo. Isso
+   - O resultado fica igual nos dois códigos porque não importa a ordem de acesso à esse dado e nem o valor do mesmo. Isso
   ocorre pois se uma thread fosse incrementar dotdata.c e logo antes de fazer a operação em assembly 'ADD X, Y, Z' outra thread 
   a interrompesse e modificasse o valor de dotdata.c o valor final de dotdata.c não mudaria
 
