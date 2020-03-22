@@ -82,10 +82,13 @@
 
 ### 3.
 
-   - Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads para o mesmo número de iterações o Speedup começa a se estabilizar após 4 threads e em alguns casos piora.
+   Sim, esse Speedup se mantém para diferentes tamanho de vetores e de repetições. No caso do aumento de threads para o mesmo número de iterações o Speedup começa a se estabilizar após 4 threads e em alguns casos piora.
 
 ### 4.
    As tabelas a seguir mostram testes com o tamanho do vetor e o número de repetições variado. Dentro de cada teste o número de thread também varia e por consequência o tamanho do vetor também. O Tempo é uma média aritimética de 5 tempos. A segundo tabela é a tabela de Speedup. O Speedup é calculado dividindo o Tempo do teste com 'Qnt Thread Inicia' pelo Tempo do teste 'Qnt Threads Final'.
+   
+   ***
+   
    - Tamanho Inicial Vetor = 10^6, Repetições = 2000
 
   | Tamanho Vetor    | Número de Repetições | Quantidade de Threads | Tempo (usec)(x-barra (5)) |
