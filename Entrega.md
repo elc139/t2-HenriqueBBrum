@@ -28,7 +28,7 @@
       }
       
 
-   b) Comunicação: Ocorre quando todos as threads precisam fazer o calculo da multiplicação entre
+   b) Comunicação: Ocorre quando todos as threads precisam fazer o cálculo da multiplicação entre
    cada posição e a soma dessas multiplicações.
 
       Em void* dotprod_worker(void* arg):
@@ -171,10 +171,11 @@
 
 
 ### 5.
-   - O código pthreads_dotprod.c possui exclusão mutua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code
-  não. Nesse caso o resultado fica igual pois não importa a ordem de acesso à esse dado e nem o valor do mesmo.
-  Pois se uma thread fossse incrementar dotdata.c e logo antes de fazer ADD X, Y, Z outra thread interrompesse
-  e se somasse à dotdata.c o valor final de dotdata.c ficaria igual.
+   O código pthreads_dotprod.c possui exclusão mútua na hora de acessar o dotdata.c, já o pthreads_dotprod2.code
+  não. 
+   O resultado fica igual nos dois códigos porque não importa a ordem de acesso à esse dado e nem o valor do mesmo. Isso
+  ocorre pois se uma thread fosse incrementar dotdata.c e logo antes de fazer a operação em assembly 'ADD X, Y, Z' outra thread 
+  a interrompesse e modificasse o valor de dotdata.c o valor final de dotdata.c não mudaria
 
 
 
