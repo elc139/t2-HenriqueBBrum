@@ -1,16 +1,12 @@
-/*
- *  Exemplo de programa para calculo de produto escalar em paralelo, usando POSIX threads.
- *  andrea@inf.ufsm.br
- */
-
- #define NTESTS 4
- #define NTHREADS 5
- #define NINDTESTS 5
-
-#include <stdio.h>
+#include <omp.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <pthread.h>
 #include <sys/time.h>
+
+#define NTESTS 4
+#define NTHREADS 5
+#define NINDTESTS 5
 
 typedef struct
  {
@@ -21,17 +17,11 @@ typedef struct
    int repeat;
  } dotdata_t;
 
-// Variaveis globais, acessiveis por todas threads
 dotdata_t dotdata;
-pthread_mutex_t mutexsum;
 
-/*
- * Funcao executada por uma thread
- */
-void *dotprod_worker(void *arg)
+void dotprod_worker()
 {
-   int i, k;
-   long offset = (long) arg;
+   int i, k, offset = omp_get_thread_num();
    double *a = dotdata.a;
    double *b = dotdata.b;
    int wsize = dotdata.wsize;
@@ -39,6 +29,7 @@ void *dotprod_worker(void *arg)
    int end = start + wsize;
    double mysum;
 
+  #pragma omp parallel for
    for (k = 0; k < dotdata.repeat; k++) {
       mysum = 0.0;
       for (i = start; i < end ; i++)  {
@@ -46,43 +37,22 @@ void *dotprod_worker(void *arg)
       }
    }
 
-   pthread_mutex_lock (&mutexsum);
+   #pragma omp atomic update
    dotdata.c += mysum;
-   pthread_mutex_unlock (&mutexsum);
-   pthread_exit((void*) 0);
+
 }
 
-
-/*
- * Distribui o trabalho entre nthreads
- */
 void dotprod_threads(int nthreads)
 {
-   int i;
-   pthread_t *threads;
-   pthread_attr_t attr;
+  omp_set_dynamic(0);
+  omp_set_num_threads(nthreads);
+  #pragma omp parallel
+  {
+    dotprod_worker();
+  }
 
-   threads = (pthread_t *) malloc(nthreads * sizeof(pthread_t));
-   pthread_mutex_init(&mutexsum, NULL);
-
-   pthread_attr_init(&attr);
-   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-
-   for (i = 0; i < nthreads; i++) {
-      pthread_create(&threads[i], &attr, dotprod_worker, (void *)i);
-   }
-   pthread_attr_destroy(&attr);
-   for (i = 0; i < nthreads; i++) {
-      pthread_join(threads[i], NULL);
-
-   }
-   free(threads);
 }
 
-
-/*
- * Tempo (wallclock) em microssegundos
- */
 long wtime()
 {
    struct timeval t;
@@ -90,9 +60,7 @@ long wtime()
    return t.tv_sec*1000000 + t.tv_usec;
 }
 
-/*
- * Preenche vetor
- */
+
 void fill(double *a, int size, double value)
 {
    int i;
@@ -148,25 +116,7 @@ void tests(){
   }
 
 }
-/*
- * Funcao principal
- */
-int main(int argc, char **argv)
-{
-   /*int nthreads, wsize, repeat;
-   long start_time, end_time;
 
-   if ((argc != 4)) {
-      printf("Uso: %s <nthreads> <worksize> <repetitions>\n", argv[0]);
-      exit(EXIT_FAILURE);
-   }
-
-   nthreads = atoi(argv[1]);
-   wsize = atoi(argv[2]);  // worksize = tamanho do vetor de cada thread
-   repeat = atoi(argv[3]); // numero de repeticoes dos calculos (para aumentar carga)*/
-
-   // Cria vetores
-
-   tests();
-   return EXIT_SUCCESS;
+int main(){
+  tests();
 }
